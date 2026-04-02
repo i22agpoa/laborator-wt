@@ -1,31 +1,20 @@
 const User = require("./User");
-const Role = require("./Role");
-const Library = require("./Library");
-const Book = require("./Book");
-const BookDetail = require("./BookDetail");
-const Notification = require("./Notifications");
+const Product = require("./Product");
+const Order = require("./Order");
+const OrderItem = require("./OrderItem");
 
-/**
- * TODO: Definiți relațiile dintre modelele bazei de date.
- */
+User.hasMany(Order, { foreignKey: "userId", onDelete: "CASCADE" });
+Order.belongsTo(User, { foreignKey: "userId" });
 
-User.belongsToMany(Role, { through: "UserRoles", foreignKey: "userId" });
-Role.belongsToMany(User, { through: "UserRoles", foreignKey: "roleId" });
+Order.hasMany(OrderItem, { foreignKey: "orderId", onDelete: "CASCADE" });
+OrderItem.belongsTo(Order, { foreignKey: "orderId" });
 
-Library.hasMany(Book, { foreignKey: "libraryId", onDelete: "CASCADE" });
-Book.belongsTo(Library, { foreignKey: "libraryId" });
-
-Book.hasOne(BookDetail, { foreignKey: "bookId", onDelete: "CASCADE" });
-BookDetail.belongsTo(Book, { foreignKey: "bookId" });
-
-User.hasMany(Notification, { foreignKey: "userId", onDelete: "CASCADE" });
-Notification.belongsTo(User, { foreignKey: "userId" });
+Product.hasMany(OrderItem, { foreignKey: "productId", onDelete: "CASCADE" });
+OrderItem.belongsTo(Product, { foreignKey: "productId" });
 
 module.exports = {
-	User,
-	Role,
-	Book,
-	BookDetail,
-	Library,
-	Notification,
+  User,
+  Product,
+  Order,
+  OrderItem,
 };
