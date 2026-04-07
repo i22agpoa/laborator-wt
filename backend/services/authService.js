@@ -18,6 +18,35 @@ const registerUser = async (username, email, password) => {
 	 * 3. Generarea unui token JWT pentru autentificare.
 	 * 4. Returnarea obiectului utilizator și a tokenului generat.
 	 */
+
+	const existingUser = await User.unscoped().findOne({
+		where: {
+			[Sequelize.Op.or]: [{ email }, { username }],
+		},
+	});
+
+	if (existingUser) {
+		const error = new Error("User already exists");
+		error.statusCode = 409;
+		throw error;
+	}
+
+	const user = await User.create({
+		username,
+		email,
+		password,
+	});
+
+	const token = generateToken({
+		id: user.id,
+		email: user.email,
+		username: user.username,
+	});
+
+	return {
+		user,
+		token,
+	};
 };
 
 /**
