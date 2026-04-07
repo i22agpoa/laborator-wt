@@ -43,6 +43,8 @@ const registerUser = async (username, email, password) => {
 		username: user.username,
 	});
 
+	const safeUser = await User.findByPk(user.id);
+
 	return {
 		user: safeUser,
 		token,
