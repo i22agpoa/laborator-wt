@@ -15,6 +15,29 @@ const register = async (req, res, next) => {
 	 * 3. Creeze un utilizator nou folosind serviciul authService.
 	 * 4. Returneze un răspuns corespunzător (de exemplu, un mesaj de succes sau un JWT token dacă este necesar).
 	 */
+
+	try {
+		const { username, email, password } = req.body;
+
+		if (!username || !email || !password) {
+			return res.status(400).json({
+				message: "Username, email and password are required",
+			});
+		}
+
+		const user = await authService.register({
+			username,
+			email,
+			password,
+		});
+
+		res.status(201).json({
+			message: "User registered successfully",
+			user,
+		});
+	} catch (error) {
+		next(error);
+	}
 };
 
 /**
