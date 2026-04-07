@@ -64,6 +64,37 @@ const loginUser = async (email, password) => {
 	 * 3. Generarea unui token JWT pentru sesiunea utilizatorului.
 	 * 4. Returnarea utilizatorului (fără parolă) și a tokenului generat.
 	 */
+
+	const user = await User.scope("withPassword").findOne({
+		where: { email },
+	});
+
+	if (!user) {
+		const error = new Error("Invalid credentials");
+		error.statusCode = 401;
+		throw error;
+	}
+
+	const isMatch = await user.comparePassword(password);
+
+	if (!isMatch) {
+		const error = new Error("Invalid credentials");
+		error.statusCode = 401;
+		throw error;
+	}
+
+	const token = generateToken({
+		id: user.id,
+		email: user.email,
+		username: user.username,
+	});
+
+	const safeUser = await User.findByPk(user.id);
+
+	return {
+		user: safeUser,
+		token,
+	};
 };
 
 module.exports = {
