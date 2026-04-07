@@ -69,6 +69,8 @@ const login = async (req, res, next) => {
 			email,
 			password,
 		});
+
+		res.status(200).json(result);
 	} catch (error) {
 		next(error);
 	}
@@ -88,6 +90,14 @@ const getProfile = async (req, res, next) => {
 	 * 2. Returneze detaliile profilului acestuia.
 	 * 3. Să fie protejată printr-un middleware de autentificare pentru a permite doar utilizatorilor autentificați accesul.
 	 */
+
+	try {
+		res.status(200).json({
+			user: req.user,
+		});
+	} catch (error) {
+		next(error);
+	}
 };
 
 module.exports = {
