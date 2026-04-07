@@ -44,7 +44,7 @@ const registerUser = async (username, email, password) => {
 	});
 
 	return {
-		user,
+		user: safeUser,
 		token,
 	};
 };
