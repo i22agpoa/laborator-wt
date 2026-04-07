@@ -11,4 +11,13 @@ const { authenticate } = require("../middleware/authMiddleware");
  * 3. Obținerea profilului utilizatorului autentificat (/profile) - protejat prin middleware-ul `authenticate`.
  */
 
+// Register
+router.post("/register", authController.register);
+
+// Login
+router.post("/login", authController.login);
+
+// Get profile (protected)
+router.get("/profile", authenticate, authController.getProfile);
+
 module.exports = router;
