@@ -25,15 +25,11 @@ const register = async (req, res, next) => {
 			});
 		}
 
-		const user = await authService.registerUser({
-			username,
-			email,
-			password,
-		});
+		const result = await authService.registerUser(username, email, password);
 
 		res.status(201).json({
 			message: "User registered successfully",
-			user,
+			...result
 		});
 	} catch (error) {
 		next(error);
@@ -65,10 +61,7 @@ const login = async (req, res, next) => {
 			});
 		}
 
-		const result = await authService.loginUser({
-			email,
-			password,
-		});
+		const result = await authService.loginUser(email, password);
 
 		res.status(200).json(result);
 	} catch (error) {
