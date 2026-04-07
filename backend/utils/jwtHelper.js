@@ -14,6 +14,16 @@ const generateToken = (payload) => {
 	 * 2. Definirea unei durate de expirare pentru token (exemplu: 1 zi).
 	 * 3. Returnarea tokenului generat.
 	 */
+
+	const token = jwt.sign(
+		payload,
+		process.env.JWT_SECRET || "secretkey",
+		{
+			expiresIn: "1d",
+		}
+	);
+
+	return token;
 };
 
 module.exports = {
