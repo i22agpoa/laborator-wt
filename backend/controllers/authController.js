@@ -25,7 +25,7 @@ const register = async (req, res, next) => {
 			});
 		}
 
-		const user = await authService.register({
+		const user = await authService.registerUser({
 			username,
 			email,
 			password,
@@ -55,6 +55,23 @@ const login = async (req, res, next) => {
 	 * 3. Autentifice utilizatorul folosind serviciul authService.
 	 * 4. Returneze un răspuns corespunzător (ex. token JWT în cazul unui succes).
 	 */
+
+	try {
+		const { email, password } = req.body;
+
+		if (!email || !password) {
+			return res.status(400).json({
+				message: "Email and password are required",
+			});
+		}
+
+		const result = await authService.loginUser({
+			email,
+			password,
+		});
+	} catch (error) {
+		next(error);
+	}
 };
 
 /**
