@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const { sequelize } = require("./config/database");
 const authRoutes = require("./routes/authRoutes");
+const productRoutes = require("./routes/productRoutes");
 const errorMiddleware = require("./middleware/errorMiddleware");
 require("dotenv").config();
 
@@ -16,6 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/product", productRoutes);
 
 // Base route
 app.get("/", (req, res) => {
