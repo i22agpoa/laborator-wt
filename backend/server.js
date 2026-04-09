@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/product", productRoutes);
+app.use("/api/products", productRoutes);
 
 // Base route
 app.get("/", (req, res) => {
