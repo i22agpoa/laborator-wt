@@ -1,5 +1,4 @@
-const { or } = require("sequelize");
-const { Order } = require("../models");
+const { Order, User } = require("../models");
 
 // Get all orders
 const getAllOrders = async (req, res, next) => {
