@@ -1,10 +1,11 @@
 const { Product } = require("../models");
+const productDTO = require("../dto/productResponseDTO");
 
 // Get all products
 const getAllProducts = async (req, res, next) => {
     try {
         const products = await Product.findAll();
-        res.status(200).json(products);
+        res.status(200).json(products.map(productDTO));
     } catch (error) {
         next(error);
     }
@@ -21,7 +22,7 @@ const getProductById = async(req, res, next) => {
             return res.status(400).json({ message: "Product not found", });
         }
 
-        res.status(200).json(product);
+        res.status(200).json(productDTO(product));
     } catch (error) {
         next(error);
     }
@@ -44,7 +45,8 @@ const createProduct = async(req, res, next) => {
             imageUrl,
         });
 
-        res.status(201).json({ message: "Product created successfully", product });
+        res.status(201).json({ message: "Product created successfully", 
+			product: productDTO(product) });
     } catch (error) {
         next(error);
     }
