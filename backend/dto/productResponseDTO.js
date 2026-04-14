@@ -3,7 +3,7 @@ const productResponseDTO = (product) => {
 		id: product.id,
 		name: product.name,
 		description: product.description,
-		price: product.price,
+		price: Number(product.price),
 		stock: product.stock,
 		imageUrl: product.imageUrl,
 	};
