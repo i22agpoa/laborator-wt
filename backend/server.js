@@ -33,7 +33,7 @@ app.use(errorMiddleware);
 const startServer = async () => {
 	try {
 		// Sync database
-		await sequelize.sync({ force: false });
+		await sequelize.sync({ alter: true });
 		console.log("Database connected successfully");
 
 		// Start server
