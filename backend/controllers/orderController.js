@@ -1,10 +1,11 @@
 const { Order, User } = require("../models");
+const orderDTO = require("../dto/orderResponseDTO");
 
 // Get all orders
 const getAllOrders = async (req, res, next) => {
     try {
         const orders = await Order.findAll();
-        res.status(200).json(orders);
+        res.status(200).json(orders.map(orderDTO));
     } catch (error) {
         next(error);
     }
@@ -21,7 +22,7 @@ const getOrderById = async(req, res, next) => {
             return res.status(400).json({ message: "Order not found", });
         }
 
-        res.status(200).json(order);
+        res.status(200).json(orderDTO(order));
     } catch (error) {
         next(error);
     }
@@ -48,7 +49,9 @@ const createOrder = async(req, res, next) => {
             status,
         });
 
-        res.status(201).json({ message: "Order created successfully", order });
+        res.status(201).json({ message: "Order created successfully", 
+			order: orderDTO(order), 
+		});
     } catch (error) {
         next(error);
     }
@@ -81,7 +84,7 @@ const updateOrder = async (req, res, next) => {
 
 		res.status(200).json({
 			message: "Order updated successfully",
-			order,
+			order: orderDTO(order),
 		});
 	} catch (error) {
 		next(error);
