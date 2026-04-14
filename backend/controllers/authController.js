@@ -1,4 +1,5 @@
 const authService = require("../services/authService");
+const userDTO = require("../dto/userResponseDTO");
 
 /**
  * Register a new user
@@ -29,7 +30,8 @@ const register = async (req, res, next) => {
 
 		res.status(201).json({
 			message: "User registered successfully",
-			...result
+			user: userDTO(result.user),
+			token: result.token,
 		});
 	} catch (error) {
 		next(error);
@@ -63,7 +65,10 @@ const login = async (req, res, next) => {
 
 		const result = await authService.loginUser(email, password);
 
-		res.status(200).json(result);
+		res.status(200).json({
+			user: userDTO(result.user),
+			token: result.token,
+		});
 	} catch (error) {
 		next(error);
 	}
@@ -86,7 +91,7 @@ const getProfile = async (req, res, next) => {
 
 	try {
 		res.status(200).json({
-			user: req.user,
+			user: userDTO(req.user),
 		});
 	} catch (error) {
 		next(error);
