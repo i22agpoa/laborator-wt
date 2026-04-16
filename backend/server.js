@@ -1,10 +1,12 @@
 const express = require("express");
 const cors = require("cors");
+const swaggerUi = require("swagger-ui-express");
 const { sequelize } = require("./config/database");
 const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const errorMiddleware = require("./middleware/errorMiddleware");
+const swaggerSpec = require("./config/swagger");
 require("dotenv").config();
 
 // Initialize Express app
@@ -20,6 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes)
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Base route
 app.get("/", (req, res) => {
