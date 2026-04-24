@@ -12,39 +12,27 @@ const Header = () => {
 	};
 
 	return (
-		<header
-			style={{
-				backgroundColor: "#0f2f78",
-				padding: "18px 40px",
-				color: "white",
-				display: "flex",
-				justifyContent: "space-between",
-				alignItems: "center",
-			}}
-		>
+		<header style={headerStyle}>
 			<h2 style={{ margin: 0 }}>
-				<Link
-					to="/"
-					style={{
-						color: "white",
-						textDecoration: "none",
-					}}
-				>
+				<Link to="/" style={brandStyle}>
 					Posadas CF Store
 				</Link>
 			</h2>
 
-			<nav style={{ display: "flex", gap: "18px", alignItems: "center" }}>
+			<nav style={navStyle}>
 				<Link style={linkStyle} to="/">Home</Link>
 				<Link style={linkStyle} to="/dashboard">Dashboard</Link>
 				<Link style={linkStyle} to="/products">Products</Link>
 				<Link style={linkStyle} to="/orders">Orders</Link>
 
 				{isAuthenticated ? (
-					<>
-						<span>{user?.username}</span>
-						<button onClick={handleLogout}>Logout</button>
-					</>
+					<div style={accountArea}>
+						<span style={userStyle}>👤 {user?.username}</span>
+
+						<button onClick={handleLogout} style={logoutStyle}>
+							Logout
+						</button>
+					</div>
 				) : (
 					<>
 						<Link style={linkStyle} to="/login">Login</Link>
@@ -56,9 +44,53 @@ const Header = () => {
 	);
 };
 
+const headerStyle = {
+	backgroundColor: "#0f2f78",
+	padding: "18px 40px",
+	color: "white",
+	display: "flex",
+	justifyContent: "space-between",
+	alignItems: "center",
+};
+
+const brandStyle = {
+	color: "white",
+	textDecoration: "none",
+};
+
+const navStyle = {
+	display: "flex",
+	gap: "18px",
+	alignItems: "center",
+};
+
+const accountArea = {
+	display: "flex",
+	alignItems: "center",
+	gap: "14px",
+	marginLeft: "18px",
+	paddingLeft: "18px",
+	borderLeft: "1px solid rgba(255,255,255,0.35)",
+};
+
 const linkStyle = {
 	color: "white",
 	textDecoration: "none",
+};
+
+const userStyle = {
+	color: "#dbe6ff",
+	fontWeight: "normal",
+	fontSize: "15px",
+};
+
+const logoutStyle = {
+	background: "none",
+	border: "none",
+	color: "white",
+	cursor: "pointer",
+	fontSize: "15px",
+	padding: 0,
 };
 
 export default Header;
