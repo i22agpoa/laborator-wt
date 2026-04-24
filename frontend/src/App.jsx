@@ -8,6 +8,7 @@ import Header from "./components/Layout/Header";
 // Pages
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
+import Products from "./pages/Products";
 import NotFound from "./pages/NotFound";
 
 // Auth components
@@ -48,6 +49,8 @@ function App() {
 									</ProtectedRoute>
 								}
 							/>
+
+							<Route path="/products" element={<Products />} />
 
 							{/* 404 - Not Found */}
 							<Route path="*" element={<NotFound />} />
