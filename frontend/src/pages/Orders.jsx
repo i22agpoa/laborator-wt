@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "../utils/axiosConfig";
+import { AuthContext } from "../context/AuthContext";
 
 const Orders = () => {
+    const { user } = useContext(AuthContext);
+    const isAdmin = user?.role === "admin";
 	const [orders, setOrders] = useState([]);
 	const [search, setSearch] = useState("");
 	const [page, setPage] = useState(1);
@@ -18,10 +21,14 @@ const Orders = () => {
 		setOrders(response.data);
 	};
 
-	const filtered = orders.filter((order) =>
-		order.status.toLowerCase().includes(search.toLowerCase()) ||
-		order.userId.toLowerCase().includes(search.toLowerCase())
-	);
+	const visibleOrders = isAdmin
+	? orders
+	: orders.filter((order) => order.userId === user?.id);
+
+    const filtered = visibleOrders.filter((order) =>
+	    order.status.toLowerCase().includes(search.toLowerCase()) ||
+	    order.userId.toLowerCase().includes(search.toLowerCase())
+    );
 
 	const totalPages = Math.ceil(filtered.length / itemsPerPage) || 1;
 	const start = (page - 1) * itemsPerPage;
@@ -74,28 +81,46 @@ const Orders = () => {
                             <th style={cellStyle}>Customer ID</th>
                             <th style={cellStyle}>Total</th>
                             <th style={cellStyle}>Status</th>
-                            <th style={cellStyle}>Actions</th>
+                            {isAdmin && <th style={cellStyle}>Actions</th>}
 						</tr>
 					</thead>
 
 					<tbody>
 						{currentOrders.map((order) => (
 							<tr key={order.id}>
-								<td style={cellStyle} title={order.id}>{order.id.slice(0, 12)}...</td>
-                                <td title={order.userId}>{order.userId.slice(0, 12)}...</td>
-								<td>{order.totalAmount} €</td>
-								<td>{order.status}</td>
-								<td>
-									<button style={editBtn} onClick={() => updateStatus(order)}>
-										Update Status
-									</button>
-									<button
-										style={deleteBtn}
-										onClick={() => setDeleteOrder(order)}
-									>
-										Delete
-									</button>
-								</td>
+								<td style={cellStyle} title={order.id}>
+	                                {order.id.slice(0, 12)}...
+                                </td>
+
+                                <td style={cellStyle} title={order.userId}>
+	                                {order.userId.slice(0, 12)}...
+                                </td>
+
+                                <td style={cellStyle}>
+	                                {order.totalAmount} €
+                                </td>
+
+                                <td style={cellStyle}>
+	                                {order.status}
+                                </td>
+
+                                {isAdmin && (
+	                                <td style={cellStyle}>
+		                                <button
+			                                style={editBtn}
+			                                onClick={() => updateStatus(order)}
+		                                >
+		                                	Update Status
+		                                </button>
+
+		                                <button
+		                                	style={deleteBtn}
+		                                	onClick={() => setDeleteOrder(order)}
+		                                >
+		                                	Delete
+		                                </button>
+	                                </td>
+                                )}
 							</tr>
 						))}
 					</tbody>
