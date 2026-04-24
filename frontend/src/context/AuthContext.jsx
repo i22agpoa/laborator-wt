@@ -18,6 +18,29 @@ export const AuthProvider = ({ children }) => {
 		 * 3. Să actualizeze starea utilizatorului și a autentificării.
 		 * 4. În caz de eroare, să elimine token-ul din localStorage și să reseteze starea autentificării.
 		 */
+
+		const loadUser = async () => {
+			const token = localStorage.getItem("token");
+
+			if (!token) {
+				setIsLoading(false);
+				return;
+			}
+
+			try {
+				const response = await authService.getProfile();
+				setUser(response.user);
+				setIsAuthenticated(true);
+			} catch (error) {
+				localStorage.removeItem("token");
+				setUser(null);
+				setIsAuthenticated(false);
+			} finally {
+				setIsLoading(false);
+			}
+		};
+
+		loadUser();
 	}, []);
 
 	const register = async (userData) => {
@@ -29,6 +52,24 @@ export const AuthProvider = ({ children }) => {
 		 * 3. Să actualizeze starea utilizatorului și a autentificării.
 		 * 4. Să returneze răspunsul serverului sau să gestioneze eventualele erori.
 		 */
+
+		try {
+			setError(null);
+
+			const response = await authService.register(userData);
+
+			localStorage.setItem("token", response.token);
+			setUser(response.user);
+			setIsAuthenticated(true);
+
+			return response;
+		} catch (error) {
+			const message =
+				error.response?.data?.message || "Registration failed";
+
+			setError(message);
+			throw new Error(message);
+		}
 	};
 
 	const login = async (credentials) => {
@@ -40,6 +81,23 @@ export const AuthProvider = ({ children }) => {
 		 * 3. Să actualizeze starea utilizatorului și a autentificării.
 		 * 4. Să returneze răspunsul serverului sau să gestioneze eventualele erori.
 		 */
+
+		try {
+			setError(null);
+
+			const response = await authService.login(credentials);
+
+			localStorage.setItem("token", response.token);
+			setUser(response.user);
+			setIsAuthenticated(true);
+
+			return response;
+		} catch (error) {
+			const message = error.response?.data?.message || "Login failed";
+
+			setError(message);
+			throw new Error(message);
+		}
 	};
 
 	const logout = () => {
@@ -50,6 +108,10 @@ export const AuthProvider = ({ children }) => {
 		 * 2. Să reseteze starea utilizatorului și a autentificării.
 		 * 3. Să returneze utilizatorul la pagina de login, dacă este necesar.
 		 */
+
+		localStorage.removeItem("token");
+		setUser(null);
+		setIsAuthenticated(false);
 	};
 
 	return (
